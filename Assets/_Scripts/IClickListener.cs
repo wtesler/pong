@@ -1,3 +1,3 @@
-public interface IClickListener {
+public interface IIndexClickListener {
     void OnClick(int index);
 }

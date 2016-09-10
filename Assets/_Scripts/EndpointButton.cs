@@ -2,11 +2,12 @@
 
 public class EndpointButton : MonoBehaviour {
     
-    private IClickListener _listener;
+    private IIndexClickListener _listener;
     private int _index;
 
-	public void setOnClickListener(IClickListener listener) {
+	public void setOnClickListener(IIndexClickListener listener) {
 		Debug.Log("Click!");
+        _listener = listener;
 	}
     
     public void setIndex(int index) {

@@ -4,39 +4,43 @@ using GooglePlayGames;
 using System;
 using GooglePlayGames.BasicApi.Nearby;
 
-public class NearbyConnectionsClient : MonoBehaviour
+public class NearbyConnectionsClient
 {
-    private bool _nearbyInitialized;
-    private bool _advertiseDeferred;
-    private bool _discoverDeferred;
-    private IDiscoveryListener _discoverListenerDeferred;
-    private Action<ConnectionRequest> _connectionActionDeferred;
+    private bool mNearbyInitialized;
+    private bool mAdvertiseDeferred;
+    private bool mDiscoverDeferred;
+    private IDiscoveryListener mDiscoveryListenerDeferred;
+	private MessageHandler mMessageHandler;
+    private Action<ConnectionRequest> mConnectionActionDeferred;
+	Action<ConnectionResponse> mConnectionResponseAction;
+	private String mCurrentConnectionEndpoint;
     
-	void Awake() {
+	public NearbyConnectionsClient() {
+		mMessageHandler = new MessageHandler();
+		mMessageHandler.register((endpointId, stringData) => {
+			mCurrentConnectionEndpoint = endpointId;
+		});
+
 		PlayGamesPlatform.InitializeNearby((client) => {
-            _nearbyInitialized = true;
+            mNearbyInitialized = true;
 			Debug.Log("Nearby connections initialized");
             
-            if (_advertiseDeferred) {
-                _advertiseDeferred = false;
-                Advertise(_connectionActionDeferred);
+            if (mAdvertiseDeferred) {
+                mAdvertiseDeferred = false;
+                Advertise(mConnectionActionDeferred);
             }
             
-            if (_discoverDeferred) {
-                _discoverDeferred = false;
-                Discover(_discoverListenerDeferred);
+            if (mDiscoverDeferred) {
+                mDiscoverDeferred = false;
+                Discover(mDiscoveryListenerDeferred);
             }
 		});
 	}
-		
-	void Start () {
-
-	}
 
 	public void Advertise (Action<ConnectionRequest> connectionRequestAction) {
-        if (!_nearbyInitialized) {
-          _advertiseDeferred = true; 
-          _connectionActionDeferred = connectionRequestAction;
+        if (!mNearbyInitialized) {
+          mAdvertiseDeferred = true; 
+          mConnectionActionDeferred = connectionRequestAction;
           return; 
         }
         
@@ -44,8 +48,8 @@ public class NearbyConnectionsClient : MonoBehaviour
 		Debug.Log ("Starting to advertise");
 		appIdentifiers.Add("tesler.will.pong");
 		PlayGamesPlatform.Nearby.StartAdvertising (
-			"Samsung Edge",  // User-friendly name
-			appIdentifiers,  // App bundle Id for this game
+			"Will Tesler",
+			appIdentifiers,
 			TimeSpan.FromSeconds (0),// 0 = advertise forever
 			(AdvertisingResult result) => {
 				Debug.Log ("OnAdvertisingResult: " + result);
@@ -55,9 +59,15 @@ public class NearbyConnectionsClient : MonoBehaviour
 	}
 
 	public void Discover (IDiscoveryListener listener) {
+        if (!mNearbyInitialized) {
+          mDiscoverDeferred = true; 
+          mDiscoveryListenerDeferred = listener;
+          return; 
+        }
+        
 		PlayGamesPlatform.Nearby.StartDiscovery (
-			PlayGamesPlatform.Nearby.GetServiceId (),
-			TimeSpan.FromSeconds (0),
+			PlayGamesPlatform.Nearby.GetServiceId(),
+			TimeSpan.FromSeconds(0),
 			listener);
 	}
 
@@ -71,35 +81,36 @@ public class NearbyConnectionsClient : MonoBehaviour
 		Debug.Log("Discovery Stopped.");
 	}
 
-	public void SendConnectionRequest(EndpointDetails remote, string name, string message, IMessageListener listener) {
-		PlayGamesPlatform.Nearby.SendConnectionRequest(
-			name,
-			remote.EndpointId,
-			GetBytes(message),
-			(response) => {
-				Debug.Log("response: " + response.ResponseStatus);
-			},
-			listener);
+	public void SendRequest(EndpointDetails remote, string name, string message) {
+		PlayGamesPlatform.Nearby.SendConnectionRequest(name, remote.EndpointId, GetBytes(message), 
+			mConnectionResponseAction, mMessageHandler);
 	}
 
-    public void Accept(string endpointId, IMessageListener listener) {
-        PlayGamesPlatform.Nearby.AcceptConnectionRequest(
-        endpointId,
-        GetBytes("Let's Play!"),
-        listener);
+    public void Accept(string endpointId) {
+		mCurrentConnectionEndpoint = endpointId;
+        PlayGamesPlatform.Nearby.AcceptConnectionRequest(endpointId, GetBytes("Let's Play!"), mMessageHandler);
     }
     
     public void Reject(string endpointId) {
         PlayGamesPlatform.Nearby.RejectConnectionRequest(endpointId);
     }
-    
-    public void SendReliableMessage(List<string> endpointIds, byte[] payload) {
-        PlayGamesPlatform.Nearby.SendReliable(endpointIds, payload);
+
+	public void SendMessage(byte[] payload, bool reliable) {
+		SendMessage(mCurrentConnectionEndpoint, payload, reliable);
+    }
+
+	public void SendMessage(string endpointId, byte[] payload, bool reliable) {
+        List<string> endpointIdList = new List<string>();
+        endpointIdList.Add(endpointId);
+        SendMessage(endpointIdList, payload, reliable);
     }
     
-    
-    public void SendUnreliableMessage(List<string> endpointIds, byte[] payload) {
-        PlayGamesPlatform.Nearby.SendUnreliable(endpointIds, payload);
+    public void SendMessage(List<string> endpointIds, byte[] payload, bool reliable) {
+		if (reliable) {
+        	PlayGamesPlatform.Nearby.SendReliable(endpointIds, payload);
+		} else {
+			PlayGamesPlatform.Nearby.SendUnreliable(endpointIds, payload);
+		}
     }
     
     public void StopAdvertise() {
@@ -107,18 +118,34 @@ public class NearbyConnectionsClient : MonoBehaviour
     }
     
     public void StopDiscover() {
-         PlayGamesPlatform.Nearby.StopAdvertising();
+         PlayGamesPlatform.Nearby.StopDiscovery(PlayGamesPlatform.Nearby.GetServiceId()) ;
     }
 
-	public void DisconnectFromEndpoint(string endpointId) {
-		PlayGamesPlatform.Nearby.DisconnectFromEndpoint(endpointId);
-		Debug.Log("Disconnected from endpoint " + endpointId);
+	public void DisconnectFromEndpoint() {
+		if (mCurrentConnectionEndpoint == null) {
+			return;
+		}
+		PlayGamesPlatform.Nearby.DisconnectFromEndpoint(mCurrentConnectionEndpoint);
+		Debug.Log("Disconnected from endpoint " + mCurrentConnectionEndpoint);
 	}
 
 	public void StopAllConnections() {
 		PlayGamesPlatform.Nearby.StopAllConnections();
+		mCurrentConnectionEndpoint = null;
 		Debug.Log("Stopped all connections.");
 	}
+
+	public void registerMessageAction(Action<String, String> action) {
+        mMessageHandler.register(action);
+    }
+
+	public void unregisterMessageAction(Action<String, String> action) {
+        mMessageHandler.unregister(action);
+    }
+
+	public void setRequestResponseAction(Action<ConnectionResponse> action) {
+        mConnectionResponseAction = action;
+    }
 
 	public static byte[] GetBytes(string str) {
 		byte[] bytes = new byte[str.Length * sizeof(char)];

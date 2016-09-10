@@ -13,7 +13,7 @@ public class DragMe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHa
 
 	public void OnBeginDrag(PointerEventData eventData)
 	{
-		var canvas = FindInParents<Canvas>(gameObject);
+		var canvas = FindInParents<Component>(gameObject);
 		if (canvas == null)
 			return;
 
