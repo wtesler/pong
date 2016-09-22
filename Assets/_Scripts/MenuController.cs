@@ -3,108 +3,101 @@ using System.Collections.Generic;
 using GooglePlayGames.BasicApi.Nearby;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UniRx;
 
 
-public class MenuController : MonoBehaviour
-{
-
+public class MenuController : MonoBehaviour {
     private static float mListItemStartYOffset = -400;
     private static float mListItemCurrentYOffset = 0f;
 
-    private NearbyConnectionsClient ncc;
     public Module module;
     public GameObject listContent;
     public GameObject requestDialog;
     public GameObject disconnectButton;
     public GameObject beepButton;
     public GameObject buttonPrefab;
-
     public Beeper beeper;
 
-    public bool ______________;
+    private NearbyConnectionsClient mNearbyClient;
+    private List<EndpointDetails> mEndpointList = new List<EndpointDetails>();
+    private ConnectionRequest mPendingConnectionRequest;
+	private Responsibilities mResponsibilities;
+	private CompositeDisposable mSubscriptions = new CompositeDisposable();
 
-    private List<EndpointDetails> _endpointList = new List<EndpointDetails>();
+	private IDiscoveryListener mDiscoveryListener;
+	private IIndexClickListener mEndpointclickListener;
+	private IConfirmDialogListener mConfirmDialogListener;
+	private IClickListener mDisconnectClickListener;
+	private IClickListener mBeepClickListener;
 
-    private ConnectionRequest _pendingConnectionRequest;
+    void Awake() {
+        mNearbyClient = module.nearbyConnectionsClient();
+		mResponsibilities = module.responsibilities ();
 
-    private IDiscoveryListener _discoveryListener;
-    private IIndexClickListener _endpointclickListener;
-    private IConfirmDialogListener _confirmDialogListener;
-
-    private IClickListener _disconnectClickListener;
-
-    private IClickListener _beepClickListener;
-
-    private Action<String, String> mMessageAction;
-
-    void Awake()
-    {
-        ncc = module.nearbyConnectionsClient();
-
-        // Setup Listeners
-        _discoveryListener = new DiscoveryListener(this, listContent, buttonPrefab);
-        _endpointclickListener = new EndpointClickListener(this);
-        _confirmDialogListener = new ConfirmRequestClickListener(this);
-        _disconnectClickListener = new DisconnectClickListener(this);
-        _beepClickListener = new BeepClickListener(this);
-        // Setup Dialog buttons
+        mDiscoveryListener = new DiscoveryListener(this, listContent, buttonPrefab);
+        mEndpointclickListener = new EndpointClickListener(this);
+        mConfirmDialogListener = new ConfirmRequestClickListener(this);
+        mDisconnectClickListener = new DisconnectClickListener(this);
+        mBeepClickListener = new BeepClickListener(this);
+        
         DialogButton[] buttons = requestDialog.GetComponentsInChildren<DialogButton>();
-        foreach (DialogButton db in buttons)
-        {
-            db.setOnClickListener(_confirmDialogListener);
+        foreach (var button in buttons) {
+            button.setOnClickListener(mConfirmDialogListener);
         }
 
-        disconnectButton.GetComponent<ClickListener>().setOnClickListener(_disconnectClickListener);
-        beepButton.GetComponent<ClickListener>().setOnClickListener(_beepClickListener);
-
-        mMessageAction = ((endpointId, data) => {
-            beeper.Beep();
-        });
+        disconnectButton.GetComponent<ClickListener>().setOnClickListener(mDisconnectClickListener);
+        beepButton.GetComponent<ClickListener>().setOnClickListener(mBeepClickListener);
     }
 
     void Start() {
-        ncc.Discover(_discoveryListener);
-        ncc.Advertise(getConnectRequestAction());
+        mNearbyClient.Discover(mDiscoveryListener);
+        mNearbyClient.Advertise(getConnectRequestAction());
 
-        ncc.registerMessageAction(mMessageAction);
+		mNearbyClient.getMessageObservable (MessageType.MENU)
+			.Subscribe (message => {
+				SceneManager.LoadScene ("TimeScene");
+				beeper.Beep ();
+			})
+			.AddTo (mSubscriptions);
+				
 
-        ncc.setRequestResponseAction((response) => {
+        mNearbyClient.setRequestResponseAction((response) => {
             Debug.Log("response: " + response.ResponseStatus);
-            ncc.SendMessage(response.RemoteEndpointId, NearbyConnectionsClient.GetBytes("Hooray!"), true);
+			mNearbyClient.SendMessage(response.RemoteEndpointId, NearbyConnectionsClient.FromString("Hooray!"), MessageType.MENU, true);
             beeper.Beep();
+            SceneManager.LoadScene("TimeScene");
         });
     }
 
     void OnDestroy() {
-        ncc.unregisterMessageAction(mMessageAction);
+        mNearbyClient.StopAdvertise();
+        mNearbyClient.StopDiscover();
+		mSubscriptions.Clear ();
     }
 
     public Action<ConnectionRequest> getConnectRequestAction() {
-        return (ConnectionRequest request) =>
-        {
+        return request => {
             Debug.Log("Received connection request: " +
             request.RemoteEndpoint.DeviceId + " " +
             request.RemoteEndpoint.EndpointId + " " +
             request.RemoteEndpoint.Name);
 
-            ncc.StopAdvertise();
+            mNearbyClient.StopAdvertise();
 
-            _pendingConnectionRequest = request;
+            mPendingConnectionRequest = request;
             requestDialog.transform.Find("Name").GetComponent<Text>().text = request.RemoteEndpoint.Name;
             requestDialog.SetActive(true);
         };
     }
 
-    public void AddItem(EndpointDetails endpointDetails)
-    {
-        foreach (EndpointDetails ed in _endpointList)
-        {
-            if (ed.DeviceId == endpointDetails.DeviceId)
-            {
+    public void AddItem(EndpointDetails endpointDetails) {
+        foreach (var details in mEndpointList) {
+            if (details.DeviceId == endpointDetails.DeviceId) {
                 return;
             }
         }
-        _endpointList.Add(endpointDetails);
+        mEndpointList.Add(endpointDetails);
 
         GameObject button = (GameObject)Instantiate(buttonPrefab);
         button.transform.parent = listContent.transform;
@@ -113,8 +106,8 @@ public class MenuController : MonoBehaviour
         mListItemCurrentYOffset += 140;
 
         EndpointButton endpointButton = button.GetComponent<EndpointButton>();
-        endpointButton.setIndex(_endpointList.Count - 1);
-        endpointButton.setOnClickListener(_endpointclickListener);
+        endpointButton.setIndex(mEndpointList.Count - 1);
+        endpointButton.setOnClickListener(mEndpointclickListener);
 
         Debug.Log("Endpoint found!");
 
@@ -123,94 +116,82 @@ public class MenuController : MonoBehaviour
     }
 
     public void endpointClicked(int index) {
-        EndpointDetails endpoint = _endpointList[index];
-        ncc.SendRequest(endpoint, "Will Tesler", "Play a game?");
+        EndpointDetails endpoint = mEndpointList[index];
+		mResponsibilities.isHost = true;
+		Debug.Log ("You are the host.");
+        mNearbyClient.SendRequest(endpoint, "Will Tesler", "Play a game?");
     }
 
-    public void dialogClicked(bool accepted)
-    {
+    public void dialogClicked(bool accepted) {
         Debug.Log("Dialog Clicked.");
         requestDialog.SetActive(false);
-        if (accepted)
-        {
-            ncc.Accept(_pendingConnectionRequest.RemoteEndpoint.EndpointId);
-            ncc.StopDiscover();
+        if (accepted) {
+			mResponsibilities.isHost = false;
+            mNearbyClient.Accept(mPendingConnectionRequest.RemoteEndpoint.EndpointId);
+            mNearbyClient.StopDiscover();
         }
-        else
-        {
-            ncc.Reject(_pendingConnectionRequest.RemoteEndpoint.EndpointId);
-            ncc.Advertise(getConnectRequestAction());
+        else {
+            mNearbyClient.Reject(mPendingConnectionRequest.RemoteEndpoint.EndpointId);
+            mNearbyClient.Advertise(getConnectRequestAction());
         }
     }
 
-    public void disconnectClicked()
-    {
-        ncc.DisconnectFromEndpoint();
+    public void disconnectClicked() {
+        mNearbyClient.DisconnectFromEndpoint();
     }
 
-    public void beepClicked()
-    {
-        ncc.SendMessage(NearbyConnectionsClient.GetBytes("Beep!"), false);
-        beeper.Beep();
+    public void beepClicked() {
+        //beeper.Beep();
+		SceneManager.LoadScene("TimeScene");
     }
 
-    class EndpointClickListener : IIndexClickListener
-    {
-        MenuController _menuController;
+    class EndpointClickListener : IIndexClickListener {
+        MenuController mMenuController;
 
         public EndpointClickListener(MenuController menuController) {
-            _menuController = menuController;
+            mMenuController = menuController;
         }
 
         public void OnClick(int index) {
             Debug.Log("Endpoint Clicked.");
 
-            _menuController.endpointClicked(index);
+            mMenuController.endpointClicked(index);
         }
     }
 
-    class ConfirmRequestClickListener : IConfirmDialogListener
-    {
-        MenuController _menuController;
+    class ConfirmRequestClickListener : IConfirmDialogListener {
+        MenuController mMenuController;
 
-        public ConfirmRequestClickListener(MenuController menuController)
-        {
-            _menuController = menuController;
+        public ConfirmRequestClickListener(MenuController menuController) {
+            mMenuController = menuController;
         }
 
-        public void OnClick(bool accepted)
-        {
-            _menuController.dialogClicked(accepted);
+        public void OnClick(bool accepted) {
+            mMenuController.dialogClicked(accepted);
         }
     }
 
-    class DisconnectClickListener : IClickListener
-    {
-        MenuController _menuController;
+    class DisconnectClickListener : IClickListener {
+        MenuController mMenuController;
 
-        public DisconnectClickListener(MenuController menuController)
-        {
-            _menuController = menuController;
+        public DisconnectClickListener(MenuController menuController) {
+            mMenuController = menuController;
         }
 
-        public void OnClick()
-        {
-            _menuController.disconnectClicked();
+        public void OnClick() {
+            mMenuController.disconnectClicked();
         }
     }
 
-    class BeepClickListener : IClickListener
-    {
-        MenuController _menuController;
+    class BeepClickListener : IClickListener  {
+        MenuController mMenuController;
 
-        public BeepClickListener(MenuController menuController)
-        {
-            _menuController = menuController;
+        public BeepClickListener(MenuController menuController) {
+            mMenuController = menuController;
         }
 
-        public void OnClick()
-        {
-            _menuController.beepClicked();
+        public void OnClick() {
+            mMenuController.beepClicked();
         }
     }
 }

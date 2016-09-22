@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GooglePlayGames;
 using System;
 using GooglePlayGames.BasicApi.Nearby;
+using UniRx;
 
 public class NearbyConnectionsClient
 {
@@ -10,16 +11,18 @@ public class NearbyConnectionsClient
     private bool mAdvertiseDeferred;
     private bool mDiscoverDeferred;
     private IDiscoveryListener mDiscoveryListenerDeferred;
-	private MessageHandler mMessageHandler;
+	private MessageDataStream mMessageDataStream;
+	private CompositeDisposable mSubscriptions = new CompositeDisposable();
     private Action<ConnectionRequest> mConnectionActionDeferred;
 	Action<ConnectionResponse> mConnectionResponseAction;
 	private String mCurrentConnectionEndpoint;
     
 	public NearbyConnectionsClient() {
-		mMessageHandler = new MessageHandler();
-		mMessageHandler.register((endpointId, stringData) => {
-			mCurrentConnectionEndpoint = endpointId;
-		});
+		mMessageDataStream = new MessageDataStream();
+
+		getMessageObservable (MessageType.NCC)
+			.Subscribe (message => mCurrentConnectionEndpoint = message.endpointId)
+			.AddTo (mSubscriptions);
 
 		PlayGamesPlatform.InitializeNearby((client) => {
             mNearbyInitialized = true;
@@ -43,16 +46,17 @@ public class NearbyConnectionsClient
           mConnectionActionDeferred = connectionRequestAction;
           return; 
         }
+
+		Debug.Log ("Starting to advertise");
         
 		List<string> appIdentifiers = new List<string> ();
-		Debug.Log ("Starting to advertise");
 		appIdentifiers.Add("tesler.will.pong");
 		PlayGamesPlatform.Nearby.StartAdvertising (
 			"Will Tesler",
 			appIdentifiers,
 			TimeSpan.FromSeconds (0),// 0 = advertise forever
-			(AdvertisingResult result) => {
-				Debug.Log ("OnAdvertisingResult: " + result);
+			result => {
+				Debug.Log ("OnAdvertisingResult: " + result.Status);
 			}, 
             connectionRequestAction
 		);
@@ -64,6 +68,8 @@ public class NearbyConnectionsClient
           mDiscoveryListenerDeferred = listener;
           return; 
         }
+
+		Debug.Log ("Starting to discover");
         
 		PlayGamesPlatform.Nearby.StartDiscovery (
 			PlayGamesPlatform.Nearby.GetServiceId(),
@@ -82,34 +88,42 @@ public class NearbyConnectionsClient
 	}
 
 	public void SendRequest(EndpointDetails remote, string name, string message) {
-		PlayGamesPlatform.Nearby.SendConnectionRequest(name, remote.EndpointId, GetBytes(message), 
-			mConnectionResponseAction, mMessageHandler);
+		PlayGamesPlatform.Nearby.SendConnectionRequest(name, remote.EndpointId, FromString(message),
+			connectionResponse => {
+				Debug.Log("Connected to " + connectionResponse.RemoteEndpointId);
+				mCurrentConnectionEndpoint = connectionResponse.RemoteEndpointId;
+				mConnectionResponseAction(connectionResponse);
+			}, mMessageDataStream);
 	}
 
     public void Accept(string endpointId) {
 		mCurrentConnectionEndpoint = endpointId;
-        PlayGamesPlatform.Nearby.AcceptConnectionRequest(endpointId, GetBytes("Let's Play!"), mMessageHandler);
+		PlayGamesPlatform.Nearby.AcceptConnectionRequest(endpointId, FromString("Let's Play!"), mMessageDataStream);
     }
     
     public void Reject(string endpointId) {
-        PlayGamesPlatform.Nearby.RejectConnectionRequest(endpointId);
+		PlayGamesPlatform.Nearby.RejectConnectionRequest(endpointId);
     }
 
-	public void SendMessage(byte[] payload, bool reliable) {
-		SendMessage(mCurrentConnectionEndpoint, payload, reliable);
+	public void SendMessage(byte[] payload, byte[] messageType, bool reliable) {
+		SendMessage(mCurrentConnectionEndpoint, payload, messageType, reliable);
     }
 
-	public void SendMessage(string endpointId, byte[] payload, bool reliable) {
+	public void SendMessage(string endpointId, byte[] payload, byte[] messageType, bool reliable) {
         List<string> endpointIdList = new List<string>();
         endpointIdList.Add(endpointId);
-        SendMessage(endpointIdList, payload, reliable);
+		SendMessage(endpointIdList, payload, messageType, reliable);
     }
     
-    public void SendMessage(List<string> endpointIds, byte[] payload, bool reliable) {
+	public void SendMessage(List<string> endpointIds, byte[] payload, byte[] messageType, bool reliable) {
+		byte[] message = new byte[messageType.Length + payload.Length];
+		Array.Copy (messageType, message, 4);
+		Array.Copy (payload, 0, message, 4, payload.Length);
+
 		if (reliable) {
-        	PlayGamesPlatform.Nearby.SendReliable(endpointIds, payload);
+			PlayGamesPlatform.Nearby.SendReliable(endpointIds, message);
 		} else {
-			PlayGamesPlatform.Nearby.SendUnreliable(endpointIds, payload);
+			PlayGamesPlatform.Nearby.SendUnreliable(endpointIds, message);
 		}
     }
     
@@ -135,27 +149,54 @@ public class NearbyConnectionsClient
 		Debug.Log("Stopped all connections.");
 	}
 
-	public void registerMessageAction(Action<String, String> action) {
-        mMessageHandler.register(action);
+	public IObservable<Message> getMessageObservable(byte[] messageType) {
+		return mMessageDataStream.getMessageObservable()
+			.Where (message => {
+				byte[] type = new byte[4];
+				Array.Copy (message.content, type, 4);
+				return type == messageType;
+			})
+			.Select (message => {
+				byte[] data = new byte[message.content.Length - 4];
+				Array.Copy (message.content, 4, data, 0, message.content.Length - 4);
+				message.content = data;
+				return message;
+			});
     }
 
-	public void unregisterMessageAction(Action<String, String> action) {
-        mMessageHandler.unregister(action);
-    }
+	public IObservable<string> getDisconnectObservable() {
+		return mMessageDataStream.getDisconnectObservable();
+	}
 
 	public void setRequestResponseAction(Action<ConnectionResponse> action) {
-        mConnectionResponseAction = action;
-    }
+		mConnectionResponseAction = action;
+	}
 
-	public static byte[] GetBytes(string str) {
+	public static byte[] FromString(string str) {
 		byte[] bytes = new byte[str.Length * sizeof(char)];
 		System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
 		return bytes;
 	}
 
-	public static string GetString(byte[] bytes) {
+	public static string ToString(byte[] bytes) {
 		char[] chars = new char[bytes.Length / sizeof(char)];
 		System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
 		return new string(chars);
+	}
+
+	public static float ToFloat(byte[] bytes) {
+		return System.BitConverter.ToSingle(bytes, 0);
+	}
+
+	public static byte[] FromFloat(float f) {
+		return System.BitConverter.GetBytes(f);
+	}
+
+	public static double ToDouble(byte[] bytes) {
+		return System.BitConverter.ToDouble(bytes, 0);
+	}
+
+	public static byte[] FromDouble(double d) {
+		return System.BitConverter.GetBytes(d);
 	}
 }

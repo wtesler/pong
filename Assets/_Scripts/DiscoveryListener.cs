@@ -3,14 +3,14 @@ using UnityEngine;
 
 class DiscoveryListener : IDiscoveryListener {
 
-		MenuController _menuController;
-		GameObject _listContent;
-		GameObject _buttonPrefab;
+		private MenuController mMenuController;
+		private GameObject mListContent;
+		private GameObject mButtonPrefab;
 
 		public DiscoveryListener(MenuController menuController, GameObject lc, GameObject bp) {
-			_menuController = menuController;
-			_listContent = lc;
-			_buttonPrefab = bp;
+			mMenuController = menuController;
+			mListContent = lc;
+			mButtonPrefab = bp;
 		}
 
 		#region IDiscoveryListener implementation
@@ -20,7 +20,7 @@ class DiscoveryListener : IDiscoveryListener {
 				discoveredEndpoint.EndpointId + " " + 
 				discoveredEndpoint.Name);
 
-			_menuController.AddItem(discoveredEndpoint);
+			mMenuController.AddItem(discoveredEndpoint);
 		}
 
 		public void OnEndpointLost (string lostEndpointId) {

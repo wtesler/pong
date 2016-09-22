@@ -1,9 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class Component : MonoBehaviour {
-
-	public NearbyConnectionsClient nearbyConnectionsClient;
+﻿public static class MainComponent {
 	
-
+	public static NearbyConnectionsClient nearbyConnectionsClient;
+	public static Responsibilities responsibilities;
 }

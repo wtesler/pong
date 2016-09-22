@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class Module : MonoBehaviour {
 
-    static Component component;
-
-    void Awake() {
-        if (component == null) {
-            component = new Component();
-        }
-    }
-
     public NearbyConnectionsClient nearbyConnectionsClient() {
-        if (component.nearbyConnectionsClient == null) {
-            component.nearbyConnectionsClient = new NearbyConnectionsClient();
+        if (MainComponent.nearbyConnectionsClient == null) {
+            MainComponent.nearbyConnectionsClient = new NearbyConnectionsClient();
         }
-        return component.nearbyConnectionsClient;
+        return MainComponent.nearbyConnectionsClient;
     }
+
+	public Responsibilities responsibilities() {
+		if (MainComponent.responsibilities == null) {
+			MainComponent.responsibilities = new Responsibilities();
+		}
+		return MainComponent.responsibilities;
+	}
 }

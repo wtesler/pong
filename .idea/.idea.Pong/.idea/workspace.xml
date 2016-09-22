@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fba5a1f5-3e51-416e-9dcc-ad79fdb6cf65" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../Assets/_Scripts/MessageListener.cs" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../../Assets/_Scripts/MessageListener.cs.meta" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Prefabs/Module.prefab" afterPath="$PROJECT_DIR$/../../Assets/_Prefabs/Module.prefab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Scenes/CollabScene.unity" afterPath="$PROJECT_DIR$/../../Assets/_Scenes/CollabScene.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Scenes/MenuScene.unity" afterPath="$PROJECT_DIR$/../../Assets/_Scenes/MenuScene.unity" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../ProjectSettings/EditorBuildSettings.asset" afterPath="$PROJECT_DIR$/../../ProjectSettings/EditorBuildSettings.asset" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/PlayServicesResolver/Editor/JarResolverLib.dll.meta" afterPath="$PROJECT_DIR$/../../Assets/PlayServicesResolver/Editor/JarResolverLib.dll.meta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Prefabs/Module.prefab.meta" afterPath="$PROJECT_DIR$/../../Assets/_Prefabs/Module.prefab.meta" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Scripts/Component.cs" afterPath="$PROJECT_DIR$/../../Assets/_Scripts/Component.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Scripts/DiscoveryListener.cs" afterPath="$PROJECT_DIR$/../../Assets/_Scripts/DiscoveryListener.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Scripts/MenuController.cs" afterPath="$PROJECT_DIR$/../../Assets/_Scripts/MenuController.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Scripts/Module.cs" afterPath="$PROJECT_DIR$/../../Assets/_Scripts/Module.cs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../Assets/_Scripts/NearbyConnectionsClient.cs" afterPath="$PROJECT_DIR$/../../Assets/_Scripts/NearbyConnectionsClient.cs" />
+    </list>
+    <ignored path="Pong.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="Pong" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="CoopController.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../Assets/_Scripts/CoopController.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
+              <folding>
+                <marker date="1473911312000" expanded="true" signature="6:32" ph="..." />
+                <marker date="1473911312000" expanded="true" signature="79:790" ph="{...}" />
+                <marker date="1473911312000" expanded="true" signature="260:550" ph="{...}" />
+                <marker date="1473911312000" expanded="true" signature="569:695" ph="{...}" />
+                <marker date="1473911312000" expanded="true" signature="718:788" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NearbyConnectionsClient.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../Assets/_Scripts/NearbyConnectionsClient.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+              <folding>
+                <marker date="1473834849000" expanded="true" signature="6:128" ph="..." />
+                <marker date="1473834849000" expanded="true" signature="166:5476" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="582:1204" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="1281:1850" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="1904:2236" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="2269:2356" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="2405:2497" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="2577:2916" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="2960:3122" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="3170:3247" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="3305:3374" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="3451:3612" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="3703:3879" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="3917:3977" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="4014:4112" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="4152:4367" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="4403:4534" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="4602:4651" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="4721:4772" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="4847:4898" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="4943:5090" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="5138:5287" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="5332:5385" ph="{...}" />
+                <marker date="1473834849000" expanded="true" signature="5428:5474" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/../../Assets/_Scripts/CoopController.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="20" />
+    <option name="y" value="43" />
+    <option name="width" value="1400" />
+    <option name="height" value="766" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>General</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>General</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="SolutionExplorer">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pong (2 projects)" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pong (2 projects)" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assembly-CSharp" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assets" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pong (2 projects)" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assembly-CSharp" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assets" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="_3rd Party Packages" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pong (2 projects)" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Assembly-CSharp" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="References" />
+              <option name="myItemType" value="com.jetbrains.resharper.projectView.solutionExplorer.SolutionExplorerNodeRider" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <option name="show-file-system" value="false" />
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="preferences.mono" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+  </component>
+  <component name="RunManager" selected=".NET Project.Default">
+    <configuration default="true" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="PROJECT_PATH" value="" />
+      <option name="PROJECT_KIND" value="None" />
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <method />
+    </configuration>
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue=".NET Project.Default" />
+    </list>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fba5a1f5-3e51-416e-9dcc-ad79fdb6cf65" name="Default" comment="" />
+      <created>1473911115654</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1473911115654</updated>
+      <workItem from="1473911117691" duration="1326000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="1326000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="20" y="43" width="1400" height="766" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Change Signature" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22071429" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Errors in solution" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32998565" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="UnitTesting" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="NuGet" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/../../Assets/_Scripts/CoopController.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
+          <folding>
+            <marker date="1473911312000" expanded="true" signature="6:32" ph="..." />
+            <marker date="1473911312000" expanded="true" signature="79:790" ph="{...}" />
+            <marker date="1473911312000" expanded="true" signature="260:550" ph="{...}" />
+            <marker date="1473911312000" expanded="true" signature="569:695" ph="{...}" />
+            <marker date="1473911312000" expanded="true" signature="718:788" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../Assets/_Scripts/NearbyConnectionsClient.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="38" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
+          <folding>
+            <marker date="1473834849000" expanded="true" signature="6:128" ph="..." />
+            <marker date="1473834849000" expanded="true" signature="166:5476" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="582:1204" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="1281:1850" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="1904:2236" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="2269:2356" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="2405:2497" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="2577:2916" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="2960:3122" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="3170:3247" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="3305:3374" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="3451:3612" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="3703:3879" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="3917:3977" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="4014:4112" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="4152:4367" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="4403:4534" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="4602:4651" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="4721:4772" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="4847:4898" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="4943:5090" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="5138:5287" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="5332:5385" ph="{...}" />
+            <marker date="1473834849000" expanded="true" signature="5428:5474" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
