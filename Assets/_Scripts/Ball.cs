@@ -12,20 +12,10 @@ public class Ball : MonoBehaviour {
 		mRigidbody = GetComponent<Rigidbody>();
 	}
 
-	// Use this for initialization
-	void Start () {
-		mRigidbody.AddForce (Vector3.down);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
 	void LateUpdate() {
 		var current = mRigidbody.velocity;
 		var normal = current.normalized * mConstantSpeed;
-		mRigidbody.velocity = normal;// Vector3.Lerp(current, normal, Time.deltaTime * mSmoothingFactor);
+		mRigidbody.velocity = normal;
  	}
 
 	void OnCollisionEnter(Collision collision) {
@@ -36,4 +26,8 @@ public class Ball : MonoBehaviour {
 			Debug.DrawRay(contact.point, contact.normal * 10, Color.green);
         }
     }
+
+	public void AddForce(Vector3 force) {
+		mRigidbody.AddForce (force);
+	}
 }

@@ -117,8 +117,8 @@ public class NearbyConnectionsClient
     
 	public void SendMessage(List<string> endpointIds, byte[] payload, byte[] messageType, bool reliable) {
 		byte[] message = new byte[messageType.Length + payload.Length];
-		Array.Copy (messageType, message, 4);
-		Array.Copy (payload, 0, message, 4, payload.Length);
+		Array.Copy (messageType, message, 8);
+		Array.Copy (payload, 0, message, 8, payload.Length);
 
 		if (reliable) {
 			PlayGamesPlatform.Nearby.SendReliable(endpointIds, message);
@@ -152,13 +152,13 @@ public class NearbyConnectionsClient
 	public IObservable<Message> getMessageObservable(byte[] messageType) {
 		return mMessageDataStream.getMessageObservable()
 			.Where (message => {
-				byte[] type = new byte[4];
-				Array.Copy (message.content, type, 4);
-				return type == messageType;
+				byte[] type = new byte[8];
+				Array.Copy (message.content, type, 8);
+				return isEqual(type, messageType);
 			})
 			.Select (message => {
-				byte[] data = new byte[message.content.Length - 4];
-				Array.Copy (message.content, 4, data, 0, message.content.Length - 4);
+				byte[] data = new byte[message.content.Length - 8];
+				Array.Copy (message.content, 8, data, 0, message.content.Length - 8);
 				message.content = data;
 				return message;
 			});
@@ -198,5 +198,19 @@ public class NearbyConnectionsClient
 
 	public static byte[] FromDouble(double d) {
 		return System.BitConverter.GetBytes(d);
+	}
+
+	private bool isEqual(byte[] a, byte[] b) {
+		if (a.Length != b.Length) {
+			return false;
+		}
+
+		for (int i = 0; i < a.Length; i++) {
+			if (a[i] != b[i]) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

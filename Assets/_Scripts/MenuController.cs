@@ -32,9 +32,6 @@ public class MenuController : MonoBehaviour {
 	private IClickListener mBeepClickListener;
 
     void Awake() {
-        mNearbyClient = module.nearbyConnectionsClient();
-		mResponsibilities = module.responsibilities ();
-
         mDiscoveryListener = new DiscoveryListener(this, listContent, buttonPrefab);
         mEndpointclickListener = new EndpointClickListener(this);
         mConfirmDialogListener = new ConfirmRequestClickListener(this);
@@ -51,22 +48,26 @@ public class MenuController : MonoBehaviour {
     }
 
     void Start() {
+		mNearbyClient = module.nearbyConnectionsClient();
+		mResponsibilities = module.responsibilities ();
+
         mNearbyClient.Discover(mDiscoveryListener);
         mNearbyClient.Advertise(getConnectRequestAction());
 
 		mNearbyClient.getMessageObservable (MessageType.MENU)
 			.Subscribe (message => {
-				SceneManager.LoadScene ("TimeScene");
-				beeper.Beep ();
+				Debug.Log("Received response from host.");
+				SceneManager.LoadScene ("LoadingScene");	
 			})
 			.AddTo (mSubscriptions);
-				
 
         mNearbyClient.setRequestResponseAction((response) => {
             Debug.Log("response: " + response.ResponseStatus);
-			mNearbyClient.SendMessage(response.RemoteEndpointId, NearbyConnectionsClient.FromString("Hooray!"), MessageType.MENU, true);
-            beeper.Beep();
-            SceneManager.LoadScene("TimeScene");
+			if (response.ResponseStatus == ConnectionResponse.Status.Accepted) {
+				Debug.Log("Received accepted response from client.");
+				mNearbyClient.SendMessage(response.RemoteEndpointId, NearbyConnectionsClient.FromString("Let's begin"), MessageType.MENU, true);
+				SceneManager.LoadScene("LoadingScene");
+			}
         });
     }
 
@@ -141,8 +142,7 @@ public class MenuController : MonoBehaviour {
     }
 
     public void beepClicked() {
-        //beeper.Beep();
-		SceneManager.LoadScene("TimeScene");
+		SceneManager.LoadScene("GameScene");
     }
 
     class EndpointClickListener : IIndexClickListener {

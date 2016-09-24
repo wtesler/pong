@@ -4,50 +4,66 @@ using System;
 using UnityEngine.UI;
 using UniRx;
 
-public class TimeCalibrator : MonoBehaviour {
-
-	public Module module;
-	public Text text;
+public class TimeCalibrator {
 
 	private NearbyConnectionsClient mNearbyClient;
 	private Responsibilities mResponsibilities;
+
+	private Subject<int> mCalibrationFinishedSubject = new Subject<int>();
 	private CompositeDisposable mSubscriptions = new CompositeDisposable();
 
-	private double mStartTime;
+	private double mHandshakeStartTime;
 	private double mClockDelta;
+
+	private double mMatchStartTime;
 
 	private bool mIsCalibrated;
 
-	void Start() {
-		mNearbyClient = module.nearbyConnectionsClient();
-		mResponsibilities = module.responsibilities ();
+	private bool mHandshakeAcknowledged;
 
-		mNearbyClient.getMessageObservable (MessageType.TIME)
-			.Subscribe (message => {
-				if (mResponsibilities.isHost) {
-					double receivedTime = getTime();
-					Debug.Log ("Responding to Handshake at time: " + receivedTime.ToString());
-					mNearbyClient.SendMessage (NearbyConnectionsClient.FromDouble(receivedTime), MessageType.TIME, true);
-				} else {
-					double hostReceivedTime = NearbyConnectionsClient.ToDouble(message.content);
-					double currentTime = getTime();
-					double latency = (mStartTime - currentTime) / 2;
-					mClockDelta = (hostReceivedTime - currentTime) + latency;
-					text.color = Color.green;
-					Debug.Log("Time Delta: " + mClockDelta.ToString());
-					mIsCalibrated = true;
-				}
-			})
-			.AddTo (mSubscriptions);
-
-		if (!mResponsibilities.isHost) {
-			StartCoroutine (HandshakeCoroutine());
-		}
-
-		InvokeRepeating ("updateText", 0, 2);
+	public TimeCalibrator(
+		NearbyConnectionsClient nearbyClient,
+		Responsibilities responsibilities) {
+			mNearbyClient = nearbyClient;
+			mResponsibilities = responsibilities;
 	}
 
-	void Destroy() {
+	public void Start() {
+		if (mResponsibilities.isHost) {
+			mNearbyClient.getMessageObservable (MessageType.TIME)
+				.Subscribe (message => {
+					if (!mHandshakeAcknowledged) {
+						double receivedTime = getTime();
+						Debug.Log ("Responding to Handshake at time: " + receivedTime.ToString ());
+						mHandshakeAcknowledged = true;
+						mNearbyClient.SendMessage (NearbyConnectionsClient.FromDouble (receivedTime), MessageType.TIME, true);
+					} else {
+						mMatchStartTime = NearbyConnectionsClient.ToDouble(message.content);
+						mIsCalibrated = true;
+						mCalibrationFinishedSubject.OnNext(0);
+					}
+				})
+				.AddTo (mSubscriptions);
+		} else {
+			mNearbyClient.getMessageObservable (MessageType.TIME)
+				.Subscribe (message => {
+					double currentTime = getTime();
+					double latency = (mHandshakeStartTime - currentTime) / 2;
+
+					double hostReceivedTime = NearbyConnectionsClient.ToDouble(message.content);
+					mClockDelta = (hostReceivedTime - currentTime) + latency;
+
+					Debug.Log("Time Delta: " + mClockDelta.ToString());
+					mIsCalibrated = true;
+					mMatchStartTime = getCalibratedTime() + 5000;
+					mNearbyClient.SendMessage (NearbyConnectionsClient.FromDouble (mMatchStartTime), MessageType.TIME, true);
+					mCalibrationFinishedSubject.OnNext(0);
+				})
+				.AddTo (mSubscriptions);
+		}
+	}
+
+	public void Destroy() {
 		mSubscriptions.Clear();
 	}
 
@@ -55,25 +71,22 @@ public class TimeCalibrator : MonoBehaviour {
 		return getTime () + mClockDelta;
 	}
 
-	private void startHandshake() {
-		mStartTime = getTime();
-		Debug.Log ("Starting Handshake at time: " + mStartTime.ToString());
+	public double getMatchStartTime () {
+		return mMatchStartTime;
+	}
+
+	public void startHandshake() {
+		mHandshakeStartTime = getTime();
+		Debug.Log ("Starting Handshake at time: " + mHandshakeStartTime.ToString());
 		mNearbyClient.SendMessage (NearbyConnectionsClient.FromString("time"), MessageType.TIME, true);
 	}
 
-	private void updateText() {
-		double time = getTime () + mClockDelta;
-		string timeString = time.ToString ("#");
-		text.text = timeString.Substring(timeString.Length - 7);
+	public IObservable<int> getCalibrationFinishedObservable() {
+		return mCalibrationFinishedSubject.AsObservable<int>();
 	}
 
 	private double getTime() {
 		TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
 		return t.TotalMilliseconds;
-	}
-
-	IEnumerator HandshakeCoroutine() {
-		yield return new WaitForSeconds(10);
-		startHandshake ();
 	}
 }

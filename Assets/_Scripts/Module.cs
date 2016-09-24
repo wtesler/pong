@@ -15,4 +15,13 @@ public class Module : MonoBehaviour {
 		}
 		return MainComponent.responsibilities;
 	}
+
+	public TimeCalibrator timeCalibrator() {
+		if (MainComponent.timeCalibrator == null) {
+			MainComponent.timeCalibrator = new TimeCalibrator(
+				nearbyConnectionsClient(), 
+				responsibilities());
+		}
+		return MainComponent.timeCalibrator;
+	}
 }

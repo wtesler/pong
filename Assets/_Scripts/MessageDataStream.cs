@@ -13,8 +13,8 @@ public class MessageDataStream : IMessageListener {
 
     #region IMessageListener implementation
     public void OnMessageReceived(string remoteEndpointId, byte[] message, bool isReliable) {
-		string reliable = isReliable ? "Reliable" : "Unreliable";
-		Debug.Log(reliable + " message received from " + remoteEndpointId + ": ");
+		//string reliable = isReliable ? "Reliable" : "Unreliable";
+		//Debug.Log(reliable + " message received from " + remoteEndpointId + ": " + NearbyConnectionsClient.ToString(message));
 		mMessageSubject.OnNext (new Message(remoteEndpointId, message, isReliable));
     }
 
